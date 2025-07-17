@@ -1,0 +1,28 @@
+.example-container {
+    height: 100vh;
+  }
+  
+  .example-sidenav {
+    width: 250px;
+  }
+  
+.botones-nav {
+  display: flex;
+  flex-direction: row;      /* fila */
+  justify-content: center;  /* centra horizontalmente */
+  align-items: center;      /* centra verticalmente (por si tienen diferente altura) */
+  gap: 8px;                 /* espacio entre botones */
+  padding: 8px;
+  width: 100%;
+  box-sizing: border-box;
+  background-color: #f0f0f0; /* opcional */
+  position: fixed;          /* para que quede fijo arriba */
+  top: 0;
+  left: 0;
+  z-index: 1000;
+}
+
+.botones-nav button {
+  width: auto;       /* ancho automático para no ocupar todo */
+  margin-bottom: 0;  /* quita margen inferior */
+}

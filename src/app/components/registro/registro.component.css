@@ -1,0 +1,9 @@
+form{
+    display: flex;
+    flex-direction: column;
+    justify-items: center;
+    align-items: center;
+}
+.full-width{
+    width:20%;
+}

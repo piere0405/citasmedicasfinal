@@ -1,0 +1,39 @@
+<form *ngIf="form" [formGroup]="form" (ngSubmit)="ingresar()" class="container" style="max-width: 400px; margin: auto; padding: 20px;">
+  <div >
+    <h1>BIENVENIDO</h1>
+  </div>
+
+  <mat-form-field class="full-width" appearance="fill">
+    <mat-label>Correo</mat-label>
+    <input matInput formControlName="correo" type="email">
+  </mat-form-field>
+
+  <mat-form-field class="full-width" appearance="fill">
+    <mat-label>Contraseña</mat-label>
+    <input matInput [type]="hide() ? 'password' : 'text'" formControlName="contrasena">
+    <button
+      mat-icon-button
+      matSuffix
+      (click)="clickEvent($event)"
+      [attr.aria-label]="'Mostrar/Ocultar contraseña'"
+      [attr.aria-pressed]="hide()"
+      tabindex="-1"
+    >
+      <mat-icon>{{ hide() ? 'visibility_off' : 'visibility' }}</mat-icon>
+    </button>
+  </mat-form-field>
+
+  <div style="text-align: right; margin-bottom: 15px;">
+    <a routerLink="/registro">¿No tienes una cuenta?</a>
+  </div>
+
+  <button
+    [disabled]="form.invalid"
+    type="submit"
+    mat-flat-button
+    color="primary"
+    class="w-100"
+  >
+    Logearse
+  </button>
+</form>
