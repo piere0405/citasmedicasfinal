@@ -1,0 +1,24 @@
+.welcome-message-container {
+  height: calc(100vh - 64px); /* Ajusta si tienes toolbar de 64px o cambia */
+  display: flex;
+  flex-direction: column;
+  justify-content: center; /* centra vertical */
+  align-items: center;     /* centra horizontal */
+  text-align: center;
+  padding: 0 20px;
+  font-family: "Roboto", sans-serif;
+  color: #333;
+}
+
+/* Opcional para título y texto */
+h1 {
+  font-weight: 700;
+  margin-bottom: 16px;
+  font-size: 2.5rem;
+}
+
+.welcome-message p {
+  font-size: 1.3rem;
+  font-weight: 500;
+  margin: 0;
+}

@@ -4,10 +4,9 @@ import { RouterOutlet } from '@angular/router';
 
 @Component({
   selector: 'app-dashboard',
-  imports: [NavbarComponent,RouterOutlet],
+  standalone: true,
+  imports: [NavbarComponent, RouterOutlet],
   templateUrl: './dashboard.component.html',
-  styleUrl: './dashboard.component.css'
+  styleUrls: ['./dashboard.component.css']
 })
-export class DashboardComponent {
-
-}
+export class DashboardComponent {}

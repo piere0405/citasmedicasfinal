@@ -1,16 +1,17 @@
-<form *ngIf="form" [formGroup]="form" (ngSubmit)="ingresar()" class="container" style="max-width: 400px; margin: auto; padding: 20px;">
-  <div >
-    <h1>BIENVENIDO</h1>
+<form *ngIf="form" [formGroup]="form" (ngSubmit)="ingresar()" class="container">
+  <div class="titulo">
+    <h1>Bienvenido</h1>
+    <p>Inicia sesión para continuar</p>
   </div>
 
-  <mat-form-field class="full-width" appearance="fill">
+  <mat-form-field class="full-width" appearance="outline">
     <mat-label>Correo</mat-label>
-    <input matInput formControlName="correo" type="email">
+    <input matInput formControlName="correo" type="email" />
   </mat-form-field>
 
-  <mat-form-field class="full-width" appearance="fill">
+  <mat-form-field class="full-width" appearance="outline">
     <mat-label>Contraseña</mat-label>
-    <input matInput [type]="hide() ? 'password' : 'text'" formControlName="contrasena">
+    <input matInput [type]="hide() ? 'password' : 'text'" formControlName="contrasena" />
     <button
       mat-icon-button
       matSuffix
@@ -23,17 +24,11 @@
     </button>
   </mat-form-field>
 
-  <div style="text-align: right; margin-bottom: 15px;">
-    <a routerLink="/registro">¿No tienes una cuenta?</a>
+  <div class="registro-link">
+    <a routerLink="/registro">¿No tienes una cuenta? Regístrate</a>
   </div>
 
-  <button
-    [disabled]="form.invalid"
-    type="submit"
-    mat-flat-button
-    color="primary"
-    class="w-100"
-  >
-    Logearse
+  <button [disabled]="form.invalid" type="submit" mat-raised-button color="primary" class="boton-login">
+    Iniciar sesión
   </button>
 </form>

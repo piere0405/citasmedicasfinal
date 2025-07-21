@@ -1,57 +1,87 @@
-<div class="empleados-container">
-    <h2>Lista de Empleados</h2>
-  
-    <input matInput (keyup)="applyFilter($event)" placeholder="Filtrar empleados" class="filtro-input" />
-  
-    <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
-  
-      <ng-container matColumnDef="nombre">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>Nombre</th>
-        <td mat-cell *matCellDef="let empleado">{{ empleado.nombre }}</td>
-      </ng-container>
-  
-      <ng-container matColumnDef="apellido">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>Apellido</th>
-        <td mat-cell *matCellDef="let empleado">{{ empleado.apellido }}</td>
-      </ng-container>
-  
-      <ng-container matColumnDef="puesto">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>Puesto</th>
-        <td mat-cell *matCellDef="let empleado">{{ empleado.puesto }}</td>
-      </ng-container>
-  
-      <ng-container matColumnDef="departamento">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>Departamento</th>
-        <td mat-cell *matCellDef="let empleado">{{ empleado.departamento }}</td>
-      </ng-container>
-  
-      <ng-container matColumnDef="email">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>Email</th>
-        <td mat-cell *matCellDef="let empleado">{{ empleado.email }}</td>
-      </ng-container>
-  
-      <ng-container matColumnDef="telefono">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>Teléfono</th>
-        <td mat-cell *matCellDef="let empleado">{{ empleado.telefono }}</td>
-      </ng-container>
-  
-      <ng-container matColumnDef="acciones">
-        <th mat-header-cell *matHeaderCellDef>Acciones</th>
-        <td mat-cell *matCellDef="let empleado">
-          <button mat-icon-button color="primary" aria-label="Editar">
-            <mat-icon>edit</mat-icon>
-          </button>
-          <button mat-icon-button color="warn" aria-label="Eliminar">
-            <mat-icon>delete</mat-icon>
-          </button>
-        </td>
-      </ng-container>
-  
-      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-  
-    </table>
-  
-    <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
-  </div>
-  
+<div class="usuarios-container">
+  <h2>Gestión de Usuarios</h2>
+
+  <!-- Formulario para crear / modificar usuario -->
+  <form (ngSubmit)="guardarUsuario()" #usuarioForm="ngForm" class="form-usuario" novalidate>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Nombre</mat-label>
+      <input matInput [(ngModel)]="usuarioActual.nombre" name="nombre" required #nombre="ngModel" />
+      <mat-error *ngIf="nombre.invalid && nombre.touched">El nombre es requerido.</mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Correo electrónico</mat-label>
+      <input matInput type="email" [(ngModel)]="usuarioActual.correo" name="correo" required email #correo="ngModel" />
+      <mat-error *ngIf="correo.invalid && correo.touched">
+        Por favor ingresa un correo válido.
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Rol</mat-label>
+      <mat-select [(ngModel)]="usuarioActual.rol" name="rol" required #rol="ngModel">
+        <mat-option value="admin">Administrador</mat-option>
+        <mat-option value="medico">Médico</mat-option>
+        <mat-option value="paciente">Paciente</mat-option>
+      </mat-select>
+      <mat-error *ngIf="rol.invalid && rol.touched">El rol es requerido.</mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Contraseña</mat-label>
+      <input matInput type="password" [(ngModel)]="usuarioActual.password" name="password" required #password="ngModel" minlength="6" />
+      <mat-error *ngIf="password.invalid && password.touched">
+        La contraseña es requerida y debe tener al menos 6 caracteres.
+      </mat-error>
+    </mat-form-field>
+
+    <button mat-raised-button color="primary" type="submit" [disabled]="usuarioForm.invalid">
+      {{ editando ? 'Actualizar Usuario' : 'Crear Usuario' }}
+    </button>
+
+    <button *ngIf="editando" mat-button type="button" (click)="cancelarEdicion()">Cancelar</button>
+  </form>
+
+  <mat-divider class="my-3"></mat-divider>
+
+  <!-- Tabla de usuarios -->
+  <table mat-table [dataSource]="dataSource" class="mat-elevation-z8" matSort>
+
+    <!-- Nombre -->
+    <ng-container matColumnDef="nombre">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Nombre</th>
+      <td mat-cell *matCellDef="let usuario">{{ usuario.nombre }}</td>
+    </ng-container>
+
+    <!-- Correo -->
+    <ng-container matColumnDef="correo">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Correo</th>
+      <td mat-cell *matCellDef="let usuario">{{ usuario.correo }}</td>
+    </ng-container>
+
+    <!-- Rol -->
+    <ng-container matColumnDef="rol">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Rol</th>
+      <td mat-cell *matCellDef="let usuario">{{ usuario.rol | titlecase }}</td>
+    </ng-container>
+
+    <!-- Acciones -->
+    <ng-container matColumnDef="acciones">
+      <th mat-header-cell *matHeaderCellDef>Acciones</th>
+      <td mat-cell *matCellDef="let usuario">
+        <button mat-icon-button color="primary" (click)="editarUsuario(usuario)" aria-label="Editar">
+          <mat-icon>edit</mat-icon>
+        </button>
+        <button mat-icon-button color="warn" (click)="eliminarUsuario(usuario)" aria-label="Eliminar">
+          <mat-icon>delete</mat-icon>
+        </button>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="columnas"></tr>
+    <tr mat-row *matRowDef="let row; columns: columnas;"></tr>
+  </table>
+
+  <p class="notificacion" *ngIf="notificacion">{{ notificacion }}</p>
+</div>

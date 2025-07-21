@@ -1,41 +1,40 @@
 <mat-sidenav-container class="example-container">
-    <mat-sidenav #sidenav mode="side" opened class="example-sidenav">
-      <button mat-icon-button aria-label="Cerrar menú" (click)="sidenav.close()">
-        <mat-icon>close</mat-icon>
+  <mat-sidenav #sidenav mode="side" opened class="example-sidenav">
+    <!-- solo botón cerrar y cuenta, sin opciones aquí -->
+    <button mat-icon-button aria-label="Cerrar menú" (click)="sidenav.close()" class="close-btn">
+      <mat-icon>close</mat-icon>
+    </button>
+
+    <mat-divider></mat-divider>
+
+    <button mat-menu-item [matMenuTriggerFor]="userMenu" class="account-button" aria-label="Cuenta de usuario">
+      <mat-icon>account_circle</mat-icon>
+      <span>Cuenta</span>
+    </button>
+
+    <mat-menu #userMenu="matMenu">
+      <button mat-menu-item (click)="logout()">
+        <mat-icon>logout</mat-icon>
+        <span>Cerrar sesión</span>
       </button>
-  
-      <div class="botones-nav">
-        <button mat-flat-button routerLink="/dashboard/clientes" (click)="sidenav.close()">Agendamiento de citas</button>
-        <button mat-flat-button routerLink="/dashboard/empleados" (click)="sidenav.close()">Gestión de perfil </button>
-        <button mat-flat-button routerLink="/dashboard/productos" (click)="sidenav.close()">Dashboard médico </button>
-        <button mat-flat-button routerLink="/dashboard/reportes" (click)="sidenav.close()">Dashboard administrativo </button>
-         <button mat-menu-item [matMenuTriggerFor]="userMenu" aria-label="Cuenta de usuario">
-        <mat-icon>account_circle</mat-icon>
-        <span>Cuenta</span>
-      </button>       
-      </div>
-  
-      <mat-divider></mat-divider>
-  
-     
-  
-      <mat-menu #userMenu="matMenu">
-        <button mat-menu-item (click)="logout()">
-          <mat-icon>logout</mat-icon>
-          <span>Cerrar sesión</span>
-        </button>
-      </mat-menu>
-    </mat-sidenav>
-  
-    <mat-sidenav-content>
-      <mat-toolbar>
-        <button mat-icon-button (click)="sidenav.toggle()" aria-label="Abrir menú lateral">
-          <mat-icon>menu</mat-icon>
-        </button>
-        <span>MENU DE OPCIONES</span>
-      </mat-toolbar>
-  
-      <router-outlet></router-outlet>
-    </mat-sidenav-content>
-  </mat-sidenav-container>
-  
+    </mat-menu>
+  </mat-sidenav>
+
+  <mat-sidenav-content>
+    <mat-toolbar color="primary">
+      <button mat-icon-button (click)="sidenav.toggle()" aria-label="Abrir menú lateral">
+        <mat-icon>menu</mat-icon>
+      </button>
+      <span>MENU DE OPCIONES</span>
+    </mat-toolbar>
+
+    <!-- Menú horizontal como encabezado arriba, fuera del sidenav -->
+    <nav class="top-nav">
+      <button mat-button routerLink="/dashboard/clientes" routerLinkActive="active-link">Agendamiento de citas</button>
+      <button mat-button routerLink="/dashboard/empleados" routerLinkActive="active-link">Gestión de perfil</button>
+      <button mat-button routerLink="/dashboard/productos" routerLinkActive="active-link">Dashboard</button>
+    </nav>
+
+    <router-outlet></router-outlet>
+  </mat-sidenav-content>
+</mat-sidenav-container>

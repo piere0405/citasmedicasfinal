@@ -1,42 +1,41 @@
-
 <form [formGroup]="form" (ngSubmit)="registrar()">
-    <h1>Formulario de registro de usuarios</h1>
-    <mat-form-field class="full-width">
-        <mat-label>Ingresa tu nombre</mat-label>
-        <input matInput formControlName="nombres">
-      </mat-form-field>
-    
-     
-      <mat-form-field class="full-width">
-        <mat-label>Ingresa tu correo</mat-label>
-        <input matInput formControlName="correo">
-      </mat-form-field>
-      <mat-form-field class="full-width">
-        <mat-label >Contraseña</mat-label>
-        <input  matInput [type]="hide() ? 'password' : 'text'"   formControlName="contrasena"/>
-        <button
-          mat-icon-button
-          matSuffix
-          (click)="clickEvent($event)"
-          [attr.aria-label]="'Hide password'"
-          [attr.aria-pressed]="hide()"
-        >
-          <mat-icon>{{hide() ? 'visibility_off' : 'visibility'}}</mat-icon>
-        </button>
-      </mat-form-field>
-      <mat-form-field class="full-width">
-        <mat-label >Confirmar Contraseña</mat-label>
-        <input  matInput [type]="hide() ? 'password' : 'text'"  formControlName="ccontrasena"/>
-        <button
-          mat-icon-button
-          matSuffix
-          (click)="clickEvent($event)"
-          [attr.aria-label]="'Hide password'"
-          [attr.aria-pressed]="hide()"
-        >
-          <mat-icon>{{hide() ? 'visibility_off' : 'visibility'}}</mat-icon>
-        </button>
-      </mat-form-field>
-      <button type="submit" [disabled] = "form.invalid" mat-flat-button>Logearse</button>
-      
+  <h2>Registro de Usuario</h2>
+
+  <mat-form-field appearance="outline">
+    <mat-label>Nombres</mat-label>
+    <input matInput formControlName="nombres" />
+  </mat-form-field>
+
+  <mat-form-field appearance="outline">
+    <mat-label>Correo electrónico</mat-label>
+    <input matInput formControlName="correo" type="email" />
+  </mat-form-field>
+
+  <mat-form-field appearance="outline">
+    <mat-label>Contraseña</mat-label>
+    <input matInput [type]="hidePassword() ? 'password' : 'text'" formControlName="contrasena" />
+    <button mat-icon-button matSuffix (click)="togglePassword('password')" type="button">
+      <mat-icon>{{ hidePassword() ? 'visibility_off' : 'visibility' }}</mat-icon>
+    </button>
+  </mat-form-field>
+
+  <mat-form-field appearance="outline">
+    <mat-label>Confirmar contraseña</mat-label>
+    <input matInput [type]="hideConfirmPassword() ? 'password' : 'text'" formControlName="ccontrasena" />
+    <button mat-icon-button matSuffix (click)="togglePassword('confirm')" type="button">
+      <mat-icon>{{ hideConfirmPassword() ? 'visibility_off' : 'visibility' }}</mat-icon>
+    </button>
+  </mat-form-field>
+
+  <!-- ✅ Nota aclaratoria de seguridad -->
+  <div class="nota">
+    <h5>Nota: La contraseña debe tener mínimo 8 caracteres, incluyendo al menos:</h5>
+    <ul>
+      <li>Una letra mayúscula</li>
+      <li>Un número</li>
+      <li>Un carácter especial</li>
+    </ul>
+  </div>
+
+  <button mat-raised-button color="primary" type="submit">Registrarse</button>
 </form>

@@ -6,7 +6,7 @@ import { InicioComponent } from './components/dashboard/inicio/inicio.component'
 import { ClientesComponent } from './components/dashboard/clientes/clientes.component';
 import { EmpleadosComponent } from './components/dashboard/empleados/empleados.component';
 import { ProductosComponent } from './components/dashboard/productos/productos.component';
-import { ReportesComponent } from './components/dashboard/reportes/reportes.component';
+
 
 export const routes: Routes = [
     {path:'',component: LoginComponent},
@@ -16,7 +16,7 @@ export const routes: Routes = [
         {path:'', component:InicioComponent},
         {path:'clientes',component:ClientesComponent},
         {path:'empleados',component:EmpleadosComponent},
-        {path:'productos',component:ProductosComponent},
-        {path:'reportes',component:ReportesComponent}
+        {path:'productos',component:ProductosComponent}
+
     ]}
 ];

@@ -1,47 +1,89 @@
-<div class="clientes-container">
-    <h2>Lista de Clientes</h2>
-  
-    <input matInput (keyup)="applyFilter($event)" placeholder="Filtrar clientes" class="filtro-input" />
-  
-    <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
-  
-      <ng-container matColumnDef="nombre">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>Nombre</th>
-        <td mat-cell *matCellDef="let cliente">{{ cliente.nombre }}</td>
-      </ng-container>
-  
-      <ng-container matColumnDef="apellido">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>Apellido</th>
-        <td mat-cell *matCellDef="let cliente">{{ cliente.apellido }}</td>
-      </ng-container>
-  
-      <ng-container matColumnDef="email">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>Email</th>
-        <td mat-cell *matCellDef="let cliente">{{ cliente.email }}</td>
-      </ng-container>
-  
-      <ng-container matColumnDef="telefono">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>Teléfono</th>
-        <td mat-cell *matCellDef="let cliente">{{ cliente.telefono }}</td>
-      </ng-container>
-  
-      <ng-container matColumnDef="acciones">
-        <th mat-header-cell *matHeaderCellDef>Acciones</th>
-        <td mat-cell *matCellDef="let cliente">
-          <button mat-icon-button color="primary" aria-label="Editar">
-            <mat-icon>edit</mat-icon>
-          </button>
-          <button mat-icon-button color="warn" aria-label="Eliminar">
-            <mat-icon>delete</mat-icon>
-          </button>
-        </td>
-      </ng-container>
-  
-      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-  
-    </table>
-  
-    <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
-  </div>
-  
+<div class="citas-container">
+  <h2>Gestión de Citas Médicas</h2>
+
+  <form (ngSubmit)="reservarCita()" class="form-cita">
+    <mat-form-field appearance="outline">
+      <mat-label>ID Paciente</mat-label>
+      <input matInput [(ngModel)]="nuevaCita.id_paciente" name="id_paciente" required />
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>ID Médico</mat-label>
+      <input matInput [(ngModel)]="nuevaCita.id_medico" name="id_medico" required />
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Fecha</mat-label>
+      <input matInput type="date" [(ngModel)]="nuevaCita.fecha" name="fecha" required />
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Hora</mat-label>
+      <input matInput type="time" [(ngModel)]="nuevaCita.hora" name="hora" required />
+    </mat-form-field>
+
+    <button mat-raised-button color="primary" type="submit">Guardar Cita</button>
+  </form>
+
+  <!-- Notificación para disponibilidad y citas próximas -->
+  <p class="notificacion-disponibilidad" *ngIf="notificacion">{{ notificacion }}</p>
+
+  <mat-form-field appearance="outline" class="full-width">
+    <mat-label>Filtrar citas</mat-label>
+    <input matInput (keyup)="applyFilter($event)" placeholder="Buscar por paciente, médico o estado" />
+  </mat-form-field>
+
+  <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
+
+    <!-- ID Paciente -->
+    <ng-container matColumnDef="id_paciente">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Paciente</th>
+      <td mat-cell *matCellDef="let cita">{{ cita.id_paciente }}</td>
+    </ng-container>
+
+    <!-- ID Médico -->
+    <ng-container matColumnDef="id_medico">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Médico</th>
+      <td mat-cell *matCellDef="let cita">{{ cita.id_medico }}</td>
+    </ng-container>
+
+    <!-- Fecha -->
+    <ng-container matColumnDef="fecha">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Fecha</th>
+      <td mat-cell *matCellDef="let cita">{{ cita.fecha | date:'dd/MM/yyyy' }}</td>
+    </ng-container>
+
+    <!-- Hora -->
+    <ng-container matColumnDef="hora">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Hora</th>
+      <td mat-cell *matCellDef="let cita">{{ cita.hora }}</td>
+    </ng-container>
+
+    <!-- Estado -->
+    <ng-container matColumnDef="estado">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Estado</th>
+      <td mat-cell *matCellDef="let cita">{{ cita.estado }}</td>
+    </ng-container>
+
+    <!-- Diagnóstico -->
+    <ng-container matColumnDef="diagnostico">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Diagnóstico</th>
+      <td mat-cell *matCellDef="let cita">{{ cita.diagnostico || '-' }}</td>
+    </ng-container>
+
+    <!-- Acciones -->
+    <ng-container matColumnDef="acciones">
+      <th mat-header-cell *matHeaderCellDef>Acciones</th>
+      <td mat-cell *matCellDef="let cita">
+        <button mat-button color="primary" (click)="reprogramarCita(cita)">Reprogramar</button>
+        <button mat-button color="warn" (click)="cancelarCita(cita)">Cancelar</button>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+  </table>
+
+  <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+</div>

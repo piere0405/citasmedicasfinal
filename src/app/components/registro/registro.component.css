@@ -1,9 +1,23 @@
-form{
-    display: flex;
-    flex-direction: column;
-    justify-items: center;
-    align-items: center;
+.nota {
+  font-size: 13px;
+  color: #555;
+  background-color: #f9f9f9;
+  padding: 12px;
+  border-radius: 8px;
+  margin-top: -8px;
+  margin-bottom: 8px;
+  width: 100%;
 }
-.full-width{
-    width:20%;
+.nota h5 {
+  margin: 0;
+  font-weight: 500;
+}
+.nota ul {
+  padding-left: 16px;
+  margin-top: 4px;
+  margin-bottom: 0;
+}
+.nota li {
+  font-size: 13px;
+  line-height: 1.4;
 }

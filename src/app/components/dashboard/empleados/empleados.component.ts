@@ -1,50 +1,134 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { MatPaginator } from '@angular/material/paginator';
-import { MatSort } from '@angular/material/sort';
-import { MatTableDataSource } from '@angular/material/table';
-import { MatTableModule } from '@angular/material/table';
-import { MatIconModule } from '@angular/material/icon';
-import { MatPaginatorModule } from '@angular/material/paginator';
+import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 
-export interface Empleado {
+import { MatTableDataSource, MatTableModule } from '@angular/material/table';
+import { MatSort, MatSortModule } from '@angular/material/sort';
+import { MatInputModule } from '@angular/material/input';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatSelectModule } from '@angular/material/select';
+import { MatDividerModule } from '@angular/material/divider';
+
+export interface Usuario {
+  id: number;
   nombre: string;
-  apellido: string;
-  puesto: string;
-  departamento: string;
-  email: string;
-  telefono: string;
+  correo: string;
+  rol: 'admin' | 'medico' | 'paciente';
+  password: string;
 }
 
-const EMPLEADOS_DATA: Empleado[] = [
-  { nombre: 'Sofía', apellido: 'Martínez', puesto: 'Gerente', departamento: 'Ventas', email: 'sofia@empresa.com', telefono: '555-1111' },
-  { nombre: 'Javier', apellido: 'Torres', puesto: 'Analista', departamento: 'Finanzas', email: 'javier@empresa.com', telefono: '555-2222' },
-  { nombre: 'Lucía', apellido: 'Fernández', puesto: 'Diseñadora', departamento: 'Marketing', email: 'lucia@empresa.com', telefono: '555-3333' },
-  { nombre: 'Miguel', apellido: 'Gómez', puesto: 'Desarrollador', departamento: 'TI', email: 'miguel@empresa.com', telefono: '555-4444' },
-  { nombre: 'Carla', apellido: 'Rivas', puesto: 'Soporte', departamento: 'Atención al Cliente', email: 'carla@empresa.com', telefono: '555-5555' },
+const USUARIOS_INICIALES: Usuario[] = [
+  { id: 1, nombre: 'Juan Pérez', correo: 'juanperez@mail.com', rol: 'admin', password: 'admin123' },
+  { id: 2, nombre: 'Dra. Ana Gómez', correo: 'ana.gomez@mail.com', rol: 'medico', password: 'medico123' },
+  { id: 3, nombre: 'Carlos Ruiz', correo: 'carlosruiz@mail.com', rol: 'paciente', password: 'paciente123' },
 ];
 
 @Component({
-  selector: 'app-empleados',
-  imports: [MatPaginatorModule,MatTableModule,MatIconModule],
+  selector: 'app-usuarios',
+  standalone: true,
   templateUrl: './empleados.component.html',
-  styleUrl: './empleados.component.css'
+  styleUrls: ['./empleados.component.css'],
+  imports: [
+    CommonModule,
+    FormsModule,
+    MatTableModule,
+    MatSortModule,
+    MatInputModule,
+    MatButtonModule,
+    MatIconModule,
+    MatFormFieldModule,
+    MatSelectModule,
+    MatDividerModule,
+  ],
 })
-export class EmpleadosComponent implements OnInit {
-  displayedColumns: string[] = ['nombre', 'apellido', 'puesto', 'departamento', 'email', 'telefono', 'acciones'];
-  dataSource = new MatTableDataSource<Empleado>(EMPLEADOS_DATA);
+export class EmpleadosComponent implements OnInit, AfterViewInit {
+  columnas: string[] = ['nombre', 'correo', 'rol', 'acciones'];
+  dataSource = new MatTableDataSource<Usuario>(USUARIOS_INICIALES);
 
-  @ViewChild(MatPaginator) paginator!: MatPaginator;
+  usuarioActual: Partial<Usuario> = {};
+  editando: boolean = false;
+  notificacion: string = '';
+
   @ViewChild(MatSort) sort!: MatSort;
 
   ngOnInit() {}
 
   ngAfterViewInit() {
-    this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
   }
 
-  applyFilter(event: Event) {
-    const filterValue = (event.target as HTMLInputElement).value;
-    this.dataSource.filter = filterValue.trim().toLowerCase();
+  guardarUsuario() {
+    if (
+      !this.usuarioActual.nombre ||
+      !this.usuarioActual.correo ||
+      !this.usuarioActual.rol ||
+      !this.usuarioActual.password
+    ) {
+      this.mostrarNotificacion('Por favor, complete todos los campos incluyendo la contraseña.');
+      return;
+    }
+
+    if (this.editando && this.usuarioActual.id != null) {
+      // Actualizar usuario existente
+      const index = this.dataSource.data.findIndex(u => u.id === this.usuarioActual.id);
+      if (index !== -1) {
+        this.dataSource.data[index] = {
+          id: this.usuarioActual.id,
+          nombre: this.usuarioActual.nombre,
+          correo: this.usuarioActual.correo,
+          rol: this.usuarioActual.rol,
+          password: this.usuarioActual.password,
+        } as Usuario;
+        this.dataSource.data = [...this.dataSource.data];
+        this.mostrarNotificacion('Usuario actualizado con éxito.');
+      }
+    } else {
+      // Crear nuevo usuario
+      const nuevoUsuario: Usuario = {
+        id: this.generarId(),
+        nombre: this.usuarioActual.nombre,
+        correo: this.usuarioActual.correo,
+        rol: this.usuarioActual.rol,
+        password: this.usuarioActual.password,
+      } as Usuario;
+      this.dataSource.data = [...this.dataSource.data, nuevoUsuario];
+      this.mostrarNotificacion('Usuario creado con éxito.');
+    }
+
+    this.usuarioActual = {};
+    this.editando = false;
+  }
+
+  editarUsuario(usuario: Usuario) {
+    this.usuarioActual = { ...usuario };
+    this.editando = true;
+  }
+
+  cancelarEdicion() {
+    this.usuarioActual = {};
+    this.editando = false;
+  }
+
+  eliminarUsuario(usuario: Usuario) {
+    if (confirm(`¿Estás seguro que deseas eliminar al usuario "${usuario.nombre}"?`)) {
+      this.dataSource.data = this.dataSource.data.filter(u => u.id !== usuario.id);
+      this.mostrarNotificacion('Usuario eliminado con éxito.');
+      if (this.editando && this.usuarioActual.id === usuario.id) {
+        this.cancelarEdicion();
+      }
+    }
+  }
+
+  mostrarNotificacion(msg: string) {
+    this.notificacion = msg;
+    setTimeout(() => (this.notificacion = ''), 4000);
+  }
+
+  generarId(): number {
+    return this.dataSource.data.length > 0
+      ? Math.max(...this.dataSource.data.map(u => u.id)) + 1
+      : 1;
   }
 }
